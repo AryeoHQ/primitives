@@ -1,0 +1,62 @@
+{
+    "name": "aryeo/primatives",
+    "description": "A package of primatives used to transform data into reusable objects.",
+    "keywords": [
+        "Aryeo",
+        "laravel",
+        "actions"
+    ],
+    "homepage": "https://github.com/aryeohq/primatives",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Justin Seliga",
+            "email": "justinsel@zillowgroup.com"
+        },
+        {
+            "name": "Rob Fonseca",
+            "email": "robfo@zillowgroup.com"
+        }
+    ],
+    "require": {
+        "php": "^8.4",
+        "ext-filter": "*",
+        "laravel/framework": "^12.0",
+        "nesbot/carbon": "^3.10"
+    },
+    "require-dev": {
+        "aryeohq/phpstan-rules": "^1.1",
+        "canvural/larastan-strict-rules": "^3.0||^2.0",
+        "ergebnis/phpstan-rules": "^2.8",
+        "brianium/paratest": "^7.0",
+        "larastan/larastan": "^2.9||^3.0",
+        "laravel/pint": "^1.14",
+        "orchestra/testbench": "^10.0.0",
+        "orchestra/testbench-core": "^10.0.0",
+        "phpstan/phpstan-deprecation-rules": "^1.1||^2.0",
+        "phpstan/phpstan-phpunit": "^2.0",
+        "phpstan/phpstan-strict-rules": "^2.0",
+        "phpunit/phpunit": "^12",
+        "shipmonk/composer-dependency-analyser": "^1.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Support\\": "src/Support/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

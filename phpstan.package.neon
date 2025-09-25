@@ -1,0 +1,33 @@
+includes:
+    - vendor/aryeohq/phpstan-rules/rules.neon
+    - vendor/canvural/larastan-strict-rules/rules.neon
+    - vendor/ergebnis/phpstan-rules/rules.neon
+    - vendor/larastan/larastan/extension.neon
+    - vendor/nesbot/carbon/extension.neon
+    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+parameters:
+    aryeo:
+        tests:
+            enabled: false
+    ergebnis:
+        final:
+            enabled: false
+        noExtends:
+            enabled: false
+        noConstructorParameterWithDefaultValue:
+            enabled: false
+        noParameterWithNullableTypeDeclaration:
+            enabled: false
+        noParameterWithNullDefaultValue:
+            enabled: false
+        noNullableReturnTypeDeclaration:
+            enabled: false
+        declareStrictTypes:
+            enabled: false
+    larastanStrictRules:
+        noFacade: false
+        noGlobalLaravelFunction: false
+    level: max
+    paths:
+        - src/
