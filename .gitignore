@@ -1,0 +1,10 @@
+.env.devbox
+.env.testing
+.envrc
+devbox.json
+devbox.lock
+vendor/
+devbox.d/
+.phpunit.cache
+.DS_Store
+coverage.xml
