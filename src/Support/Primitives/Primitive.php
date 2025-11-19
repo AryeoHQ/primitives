@@ -7,6 +7,7 @@ namespace Support\Primitives;
 use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Support\Traits\Macroable;
 use ReflectionClass;
+use ReflectionException;
 
 abstract class Primitive implements Castable, Contracts\Primitive
 {
@@ -24,14 +25,19 @@ abstract class Primitive implements Castable, Contracts\Primitive
      * Laravel’s container app() function accepts an array as the second argument, but it only maps
      * by constructor parameter name. This method uses reflection to take indexed array and convert
      * it into an associative array with the correct constructor parameter names.
+     *
+     * @param class-string<Contracts\Primitive> $className
+     * @param array<int, mixed> $params
+     * @return static
+     * @throws ReflectionException
      */
-    final protected static function makeDynamically(string $class, array $params): static
+    final protected static function makeDynamically(string $className, array $params): static
     {
-        $reflection = new ReflectionClass($class);
+        $reflection = new ReflectionClass($className);
         $constructor = $reflection->getConstructor();
 
         if (! $constructor) {
-            return app($class);
+            return app($className);
         }
 
         $args = [];
@@ -44,6 +50,6 @@ abstract class Primitive implements Castable, Contracts\Primitive
             $index++;
         }
 
-        return app($class, $args);
+        return app($className, $args);
     }
 }
