@@ -27,7 +27,7 @@ final class Number extends Primitive
 
     public function add(int|float|string|Text|Number $value): static
     {
-        return self::make(bcadd((string) $this->value, (string) $this->parseValue($value), 2));
+        return static::make(bcadd((string) $this->value, (string) $this->parseValue($value), 2));
     }
 
     public function subtract(int|float|string|Text|Number $value): static
