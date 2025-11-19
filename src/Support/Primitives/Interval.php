@@ -6,17 +6,13 @@ namespace Support\Primitives;
 
 use Carbon\CarbonInterface;
 use Carbon\CarbonPeriod;
-use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Support\Facades\Date;
-use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
 use Support\Primitives\Casts\AsInterval;
 
-final class Interval extends Primitive implements Castable, Contracts\Primitive
+final class Interval extends Primitive
 {
-    use Macroable;
-
     public readonly string|CarbonInterface|Number|Text|float|int|null $min;
 
     public readonly string|CarbonInterface|Number|Text|float|int|null $max;
