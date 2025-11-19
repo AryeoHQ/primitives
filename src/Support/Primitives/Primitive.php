@@ -24,7 +24,7 @@ abstract class Primitive implements Castable, Contracts\Primitive
     /**
      * Laravel’s container app() function accepts an array as the second argument, but it only maps
      * by constructor parameter name. This method uses reflection to take an indexed array and convert
-     * it into an associative array with the correct constructor parameter names.
+     * it into an associative array with the correct constructor parameter names as the array keys.
      *
      * @param class-string<Contracts\Primitive> $className
      * @param array<int, mixed> $params
