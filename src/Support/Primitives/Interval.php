@@ -13,7 +13,7 @@ use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
 use Support\Primitives\Casts\AsInterval;
 
-final class Interval implements Castable, Contracts\Primitive
+final class Interval extends Primitive implements Castable, Contracts\Primitive
 {
     use Macroable;
 
@@ -47,11 +47,6 @@ final class Interval implements Castable, Contracts\Primitive
     public static function castUsing(array $arguments): string
     {
         return AsInterval::class;
-    }
-
-    public static function make(string|CarbonInterface|CarbonPeriod|Number|Text|float|int|null $min = null, string|CarbonInterface|CarbonPeriod|Number|Text|float|int|null $max = null): static
-    {
-        return app(self::class, ['min' => $min, 'max' => $max]);
     }
 
     public function toText(string $delimiter = '...'): Text
