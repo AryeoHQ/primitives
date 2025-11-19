@@ -25,6 +25,16 @@ class IntervalTest extends TestCase
     }
 
     #[Test]
+    public function interval_can_be_created_from_primitive(): void
+    {
+        $interval = Interval::make(new Interval(1, 10));
+
+        $this->assertInstanceOf(Interval::class, $interval);
+        $this->assertEquals(1, $interval->min->value);
+        $this->assertEquals(10, $interval->max->value);
+    }
+
+    #[Test]
     public function interval_can_be_created_from_carbon_period(): void
     {
         $interval = Interval::make(CarbonPeriod::create('2025-01-01', '2025-01-31'));
@@ -38,7 +48,7 @@ class IntervalTest extends TestCase
     public function interval_can_be_created_from_text(): void
     {
         $interval = Interval::make(Text::make('2025-01-01'), Text::make('2025-01-31'));
-        
+
         $this->assertInstanceOf(Text::class, $interval->min);
         $this->assertInstanceOf(Text::class, $interval->max);
         $this->assertEquals('2025-01-01', $interval->min->value);
@@ -61,7 +71,7 @@ class IntervalTest extends TestCase
     public function interval_can_be_converted_to_text(): void
     {
         $interval = Interval::make(10, 20);
-        
+
         $this->assertInstanceOf(Text::class, $interval->toText());
         $this->assertEquals('10...20', $interval->toText()->value);
     }
@@ -70,7 +80,7 @@ class IntervalTest extends TestCase
     public function interval_can_be_converted_to_text_with_custom_delimeter(): void
     {
         $interval = Interval::make(10, 20);
-        
+
         $this->assertInstanceOf(Text::class, $interval->toText('||'));
         $this->assertEquals('10||20', $interval->toText('||')->value);
     }
