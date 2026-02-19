@@ -8,6 +8,7 @@ use Carbon\CarbonPeriod;
 use Support\Primitives\Text;
 use Support\Primitives\Number;
 use Support\Primitives\Interval;
+use Illuminate\Support\Facades\Date;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -17,11 +18,11 @@ class IntervalTest extends TestCase
     #[Test]
     public function interval_can_be_created(): void
     {
-        $interval = Interval::make(Carbon::parse('2025-01-01'), Carbon::parse('2025-01-31'));
+        $interval = Interval::make(Date::parse('2025-01-01'), \Illuminate\Support\Facades\Date::parse('2025-01-31'));
 
         $this->assertInstanceOf(Interval::class, $interval);
-        $this->assertEquals(Carbon::parse('2025-01-01'), $interval->min);
-        $this->assertEquals(Carbon::parse('2025-01-31'), $interval->max);
+        $this->assertEquals(Date::parse('2025-01-01'), $interval->min);
+        $this->assertEquals(Date::parse('2025-01-31'), $interval->max);
     }
 
     #[Test]
@@ -30,8 +31,8 @@ class IntervalTest extends TestCase
         $interval = Interval::make(CarbonPeriod::create('2025-01-01', '2025-01-31'));
 
         $this->assertInstanceOf(Interval::class, $interval);
-        $this->assertEquals(Carbon::parse('2025-01-01'), $interval->min);
-        $this->assertEquals(Carbon::parse('2025-01-31'), $interval->max);
+        $this->assertEquals(Date::parse('2025-01-01'), $interval->min);
+        $this->assertEquals(Date::parse('2025-01-31'), $interval->max);
     }
 
     #[Test]
@@ -90,7 +91,7 @@ class IntervalTest extends TestCase
         };
 
         $this->assertInstanceOf(Interval::class, $model->date);
-        $this->assertEquals(Carbon::parse('2025-01-01'), $model->date->min);
-        $this->assertEquals(Carbon::parse('2025-01-31'), $model->date->max);
+        $this->assertEquals(Date::parse('2025-01-01'), $model->date->min);
+        $this->assertEquals(Date::parse('2025-01-31'), $model->date->max);
     }
 }

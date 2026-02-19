@@ -23,7 +23,7 @@
         "nesbot/carbon": "^3.10"
     },
     "require-dev": {
-        "aryeo/tooling-laravel": "^0.0.7",
+        "aryeo/tooling-laravel": "^0.0.17",
         "orchestra/testbench": "^10.6",
         "orchestra/testbench-core": "^10.7",
         "brianium/paratest": "^7.14",
