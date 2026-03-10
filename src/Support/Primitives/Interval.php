@@ -76,9 +76,14 @@ final class Interval implements Castable, Contracts\Primitive
         return (string) $this;
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         return $this->toText()->toString();
+    }
+
+    public function __toString(): string
+    {
+        return $this->toString();
     }
 
     private function parseValue(string|CarbonInterface|Number|Text|float|int|null $value): CarbonInterface|Number|Text|null

@@ -128,8 +128,10 @@ class SortTest extends TestCase
         $desc = Sort::make('created_at', Direction::Desc);
         $asc = Sort::make('created_at', Direction::Asc);
 
-        $this->assertSame('-created_at', (string) $desc);
-        $this->assertSame('created_at', (string) $asc);
+        $this->assertSame('-created_at', $desc->toString());
+        $this->assertSame($desc->toString(), (string) $desc);
+        $this->assertSame('created_at', $asc->toString());
+        $this->assertSame($asc->toString(), (string) $asc);
     }
 
     #[Test]

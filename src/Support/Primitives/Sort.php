@@ -68,8 +68,13 @@ final class Sort implements Castable, Contracts\Primitive
         return $this->direction->toPrefix()->append($this->field->toString());
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         return $this->toText()->toString();
+    }
+
+    public function __toString(): string
+    {
+        return $this->toString();
     }
 }
