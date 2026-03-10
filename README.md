@@ -152,6 +152,77 @@ $interval = $text->toInterval('-'); // Interval with min=1, max=100
 ##### Stringable Methods
 Since `Text` extends Laravel's `Stringable`, it inherits all Stringable methods.
 
+### Sort
+
+The `Sort` class represents a sort directive — a field name paired with a direction. It is a compound value object composed of a `Text` field and a `Direction` enum.
+
+Its text representation uses prefix format: `-created_at` for descending, `created_at` for ascending.
+
+#### Direction
+
+`Direction` is a string-backed enum with two cases:
+
+```php
+Direction::Asc  // 'asc'
+Direction::Desc // 'desc'
+```
+
+#### Methods
+
+##### `make(string|Text|Sort $field, string|Direction|null $direction = null): static`
+Static factory method to create a new Sort instance. Defaults to ascending if no direction is provided.
+```php
+$sort = Sort::make('created_at', Direction::Desc);
+$sort = Sort::make('created_at', 'desc');
+$sort = Sort::make('created_at'); // defaults to Direction::Asc
+$sort = Sort::make(Text::make('created_at'), Direction::Asc);
+```
+
+If the field string starts with a `-` prefix, it is always interpreted as descending — even if an explicit direction is provided:
+```php
+$sort = Sort::make('-created_at');                    // field: created_at, direction: Desc
+$sort = Sort::make('-created_at', Direction::Asc);    // field: created_at, direction: Desc
+$sort = Sort::make('created_at');                     // field: created_at, direction: Asc
+$sort = Sort::make('created_at', Direction::Desc);    // field: created_at, direction: Desc
+```
+
+Passing an existing `Sort` instance returns it as-is:
+```php
+$sort = Sort::make($existingSort); // returns $existingSort
+```
+
+##### `toText(): Text`
+Returns the sort as a prefix-formatted `Text` instance.
+```php
+Sort::make('created_at', Direction::Desc)->toText()->toString(); // "-created_at"
+Sort::make('created_at', Direction::Asc)->toText()->toString();  // "created_at"
+```
+
+##### `jsonSerialize(): string`
+`Sort` implements `JsonSerializable`, serializing to its prefix format:
+```php
+json_encode(Sort::make('created_at', Direction::Desc));
+// "-created_at"
+```
+
+#### Properties
+
+```php
+$sort = Sort::make('created_at', Direction::Desc);
+$sort->field;     // Text instance
+$sort->direction; // Direction::Desc
+```
+
+#### Castable
+
+`Sort` implements `Castable` and stores as a prefix string in the database.
+
+```php
+protected $casts = [
+    'sort' => Sort::class,
+];
+```
+
 ## Macros
 
 All primitives use the `Illuminate\Support\Traits\Macroable` trait to allow for extension of methods.
@@ -166,23 +237,18 @@ Number::make(5)->mod(2)->value // 1
 
 ## Castable
 
-All primitives are castable
+All primitives are castable.
 
 ```php
-// Example: Using a primitive as a cast in an Eloquent model
-
 use Illuminate\Database\Eloquent\Model;
 use Support\Primitives\Boolean;
+use Support\Primitives\Sort;
 
 class User extends Model
 {
     protected $casts = [
         'is_admin' => Boolean::class,
+        'default_sort' => Sort::class,
     ];
 }
-
-// Usage:
-$user = new User(['is_admin' => true]);
-$user->is_admin; // Instance of Boolean
 ```
-
