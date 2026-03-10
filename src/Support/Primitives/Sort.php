@@ -8,10 +8,9 @@ use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
-use JsonSerializable;
 use Support\Primitives\Casts\AsSort;
 
-final class Sort implements Castable, Contracts\Primitive, JsonSerializable
+final class Sort implements Castable, Contracts\Primitive
 {
     use Macroable;
 
