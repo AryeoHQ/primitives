@@ -44,7 +44,7 @@ class TextTest extends TestCase
     public function text_can_be_created_from_string(): void
     {
         $text = Text::make('Hello World');
-        
+
         $this->assertEquals('Hello World', $text->value);
     }
 
@@ -96,7 +96,7 @@ class TextTest extends TestCase
         $this->assertInstanceOf(Interval::class, $interval);
         $this->assertNull($interval->min);
         $this->assertEquals(Date::parse('2025-01-01'), $interval->max);
-        
+
     }
 
     #[Test]
@@ -107,6 +107,12 @@ class TextTest extends TestCase
         $this->assertInstanceOf(Interval::class, $interval);
         $this->assertEquals(Date::parse('2025-01-01'), $interval->min);
         $this->assertNull($interval->max);
+    }
+
+    #[Test]
+    public function text_can_be_json_serialized(): void
+    {
+        $this->assertEquals('"hello"', json_encode(Text::make('hello')));
     }
 
     #[Test]

@@ -4,4 +4,4 @@ declare(strict_types=1);
 
 namespace Support\Primitives\Contracts;
 
-interface Primitive {}
+interface Primitive extends \JsonSerializable, \Stringable {}

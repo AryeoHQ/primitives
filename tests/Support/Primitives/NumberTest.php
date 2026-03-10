@@ -107,7 +107,7 @@ class NumberTest extends TestCase
     public function number_can_be_converted_to_integer(): void
     {
         $number = Number::make(10.4);
-        
+
         $this->assertEquals(10, $number->toInteger()->value);
     }
 
@@ -117,6 +117,20 @@ class NumberTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         Number::make('invalid');
+    }
+
+    #[Test]
+    public function number_can_be_json_serialized(): void
+    {
+        $this->assertEquals('42', json_encode(Number::make(42)));
+        $this->assertEquals('3.14', json_encode(Number::make(3.14)));
+    }
+
+    #[Test]
+    public function number_can_be_cast_to_string(): void
+    {
+        $this->assertEquals('42', (string) Number::make(42));
+        $this->assertEquals('3.14', (string) Number::make(3.14));
     }
 
     #[Test]

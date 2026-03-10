@@ -56,7 +56,29 @@ final class Interval implements Castable, Contracts\Primitive
 
     public function toText(string $delimiter = '...'): Text
     {
-        return Text::make(Text::make($this->min)->toString().$delimiter.Text::make($this->max)->toString());
+        $min = match (true) {
+            $this->min === null => '',
+            $this->min instanceof CarbonInterface => $this->min->toISOString(),
+            default => (string) $this->min,
+        };
+
+        $max = match (true) {
+            $this->max === null => '',
+            $this->max instanceof CarbonInterface => $this->max->toISOString(),
+            default => (string) $this->max,
+        };
+
+        return Text::make($min.$delimiter.$max);
+    }
+
+    public function jsonSerialize(): string
+    {
+        return (string) $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->toText()->toString();
     }
 
     private function parseValue(string|CarbonInterface|Number|Text|float|int|null $value): CarbonInterface|Number|Text|null

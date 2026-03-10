@@ -71,4 +71,14 @@ final class Number extends Primitive
     {
         return static::make($this->value)->round();
     }
+
+    public function jsonSerialize(): int|float
+    {
+        return $this->value;
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->value;
+    }
 }

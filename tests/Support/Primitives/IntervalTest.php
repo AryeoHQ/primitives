@@ -39,7 +39,7 @@ class IntervalTest extends TestCase
     public function interval_can_be_created_from_text(): void
     {
         $interval = Interval::make(Text::make('2025-01-01'), Text::make('2025-01-31'));
-        
+
         $this->assertInstanceOf(Text::class, $interval->min);
         $this->assertInstanceOf(Text::class, $interval->max);
         $this->assertEquals('2025-01-01', $interval->min->value);
@@ -62,7 +62,7 @@ class IntervalTest extends TestCase
     public function interval_can_be_converted_to_text(): void
     {
         $interval = Interval::make(10, 20);
-        
+
         $this->assertInstanceOf(Text::class, $interval->toText());
         $this->assertEquals('10...20', $interval->toText()->value);
     }
@@ -71,9 +71,25 @@ class IntervalTest extends TestCase
     public function interval_can_be_converted_to_text_with_custom_delimeter(): void
     {
         $interval = Interval::make(10, 20);
-        
+
         $this->assertInstanceOf(Text::class, $interval->toText('||'));
         $this->assertEquals('10||20', $interval->toText('||')->value);
+    }
+
+    #[Test]
+    public function interval_can_be_json_serialized(): void
+    {
+        $interval = Interval::make(1, 100);
+
+        $this->assertEquals('"1...100"', json_encode($interval));
+    }
+
+    #[Test]
+    public function interval_can_be_cast_to_string(): void
+    {
+        $interval = Interval::make(1, 100);
+
+        $this->assertEquals('1...100', (string) $interval);
     }
 
     #[Test]

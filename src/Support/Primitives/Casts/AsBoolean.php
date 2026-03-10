@@ -6,10 +6,9 @@ namespace Support\Primitives\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Support\Primitives\Boolean;
-use Support\Primitives\Contracts\Primitive;
 
 /** @implements CastsAttributes<bool, bool> */
-class AsBoolean implements CastsAttributes, Primitive
+class AsBoolean implements CastsAttributes
 {
     public function get($model, $key, $value, $attributes)
     {
