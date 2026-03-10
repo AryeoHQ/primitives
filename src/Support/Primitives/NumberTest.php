@@ -129,8 +129,13 @@ class NumberTest extends TestCase
     #[Test]
     public function number_can_be_cast_to_string(): void
     {
-        $this->assertSame('42', (string) Number::make(42));
-        $this->assertSame('3.14', (string) Number::make(3.14));
+        $integer = Number::make(42);
+        $this->assertSame('42', $integer->toString());
+        $this->assertSame($integer->toString(), (string) $integer);
+
+        $float = Number::make(3.14);
+        $this->assertSame('3.14', $float->toString());
+        $this->assertSame($float->toString(), (string) $float);
     }
 
     #[Test]

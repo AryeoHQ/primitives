@@ -52,8 +52,8 @@ class IntervalTest extends TestCase
         $this->assertInstanceOf(Interval::class, $interval);
         $this->assertInstanceOf(Number::class, $interval->min);
         $this->assertInstanceOf(Number::class, $interval->max);
-        $this->assertEquals(10, $interval->min->value); // @phpstan-ignore property.protected
-        $this->assertEquals(20, $interval->max->value); // @phpstan-ignore property.protected
+        $this->assertSame('10', $interval->min->toString());
+        $this->assertSame('20', $interval->max->toString());
     }
 
     #[Test]
@@ -87,7 +87,16 @@ class IntervalTest extends TestCase
     {
         $interval = Interval::make(1, 100);
 
-        $this->assertSame('1...100', (string) $interval);
+        $this->assertSame('1...100', $interval->toString());
+        $this->assertSame($interval->toString(), (string) $interval);
+
+        $openMin = Interval::make(null, 100);
+        $this->assertSame('...100', $openMin->toString());
+        $this->assertSame($openMin->toString(), (string) $openMin);
+
+        $openMax = Interval::make(5, null);
+        $this->assertSame('5...', $openMax->toString());
+        $this->assertSame($openMax->toString(), (string) $openMax);
     }
 
     #[Test]

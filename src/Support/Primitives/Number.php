@@ -77,8 +77,13 @@ final class Number extends Primitive
         return $this->value;
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         return (string) $this->value;
+    }
+
+    public function __toString(): string
+    {
+        return $this->toString();
     }
 }
