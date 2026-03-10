@@ -1,13 +1,12 @@
 <?php
 
-namespace Tests\Support\Primitives;
+declare(strict_types=1);
 
-use Tests\TestCase;
-use Support\Primitives\Text;
-use Support\Primitives\Number;
-use Support\Primitives\Boolean;
-use PHPUnit\Framework\Attributes\Test;
+namespace Support\Primitives;
+
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 #[CoversClass(Boolean::class)]
 class BooleanTest extends TestCase
@@ -67,7 +66,7 @@ class BooleanTest extends TestCase
     {
         $boolean1 = Boolean::make(Text::make('true'));
         $boolean2 = Boolean::make(Text::make('false'));
-        
+
         $this->assertTrue($boolean1);
         $this->assertFalse($boolean2);
     }
@@ -86,6 +85,6 @@ class BooleanTest extends TestCase
             ];
         };
 
-        $this->assertTrue($model->is_admin);
+        $this->assertTrue($model->is_admin); // @phpstan-ignore property.notFound
     }
 }

@@ -1,14 +1,14 @@
 <?php
 
-namespace Tests\Support\Primitives;
+declare(strict_types=1);
 
-use Tests\TestCase;
-use Support\Primitives\Text;
+namespace Support\Primitives;
+
 use InvalidArgumentException;
-use Support\Primitives\Number;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Primitives\Contracts\Primitive;
-use PHPUnit\Framework\Attributes\CoversClass;
+use Tests\TestCase;
 
 #[CoversClass(Number::class)]
 class NumberTest extends TestCase
@@ -122,15 +122,15 @@ class NumberTest extends TestCase
     #[Test]
     public function number_can_be_json_serialized(): void
     {
-        $this->assertEquals('42', json_encode(Number::make(42)));
-        $this->assertEquals('3.14', json_encode(Number::make(3.14)));
+        $this->assertSame('42', json_encode(Number::make(42)));
+        $this->assertSame('3.14', json_encode(Number::make(3.14)));
     }
 
     #[Test]
     public function number_can_be_cast_to_string(): void
     {
-        $this->assertEquals('42', (string) Number::make(42));
-        $this->assertEquals('3.14', (string) Number::make(3.14));
+        $this->assertSame('42', (string) Number::make(42));
+        $this->assertSame('3.14', (string) Number::make(3.14));
     }
 
     #[Test]
@@ -147,7 +147,7 @@ class NumberTest extends TestCase
             ];
         };
 
-        $this->assertInstanceOf(Number::class, $model->age);
-        $this->assertEquals(10, $model->age->value);
+        $this->assertInstanceOf(Number::class, $model->age); // @phpstan-ignore property.notFound
+        $this->assertEquals(10, $model->age->value); // @phpstan-ignore property.notFound
     }
 }

@@ -1,15 +1,15 @@
 <?php
 
-namespace Tests\Support\Primitives;
+declare(strict_types=1);
+
+namespace Support\Primitives;
 
 use Illuminate\Support\Facades\Date;
-use Tests\TestCase;
-use Support\Primitives\Text;
-use Support\Primitives\Interval;
 use Illuminate\Support\Stringable;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Primitives\Contracts\Primitive;
-use PHPUnit\Framework\Attributes\CoversClass;
+use Tests\TestCase;
 
 #[CoversClass(Text::class)]
 class TextTest extends TestCase
@@ -21,7 +21,7 @@ class TextTest extends TestCase
 
         $this->assertInstanceOf(Text::class, $text);
         $this->assertInstanceOf(Primitive::class, $text);
-        $this->assertEquals('Hello World', $text->value);
+        $this->assertSame('Hello World', $text->toString());
     }
 
     #[Test]
@@ -37,7 +37,7 @@ class TextTest extends TestCase
     {
         $text = Text::make(Text::make('Hello World'));
 
-        $this->assertEquals('Hello World', $text->value);
+        $this->assertSame('Hello World', $text->toString());
     }
 
     #[Test]
@@ -45,7 +45,7 @@ class TextTest extends TestCase
     {
         $text = Text::make('Hello World');
 
-        $this->assertEquals('Hello World', $text->value);
+        $this->assertSame('Hello World', $text->toString());
     }
 
     #[Test]
@@ -96,7 +96,6 @@ class TextTest extends TestCase
         $this->assertInstanceOf(Interval::class, $interval);
         $this->assertNull($interval->min);
         $this->assertEquals(Date::parse('2025-01-01'), $interval->max);
-
     }
 
     #[Test]
@@ -129,7 +128,7 @@ class TextTest extends TestCase
             ];
         };
 
-        $this->assertInstanceOf(Text::class, $model->name);
-        $this->assertEquals('John Doe', $model->name->value);
+        $this->assertInstanceOf(Text::class, $model->name); // @phpstan-ignore property.notFound
+        $this->assertSame('John Doe', $model->name->toString()); // @phpstan-ignore property.notFound
     }
 }

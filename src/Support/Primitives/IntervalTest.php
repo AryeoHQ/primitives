@@ -1,16 +1,14 @@
 <?php
 
-namespace Tests\Support\Primitives;
+declare(strict_types=1);
 
-use Carbon\Carbon;
-use Tests\TestCase;
+namespace Support\Primitives;
+
 use Carbon\CarbonPeriod;
-use Support\Primitives\Text;
-use Support\Primitives\Number;
-use Support\Primitives\Interval;
 use Illuminate\Support\Facades\Date;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 #[CoversClass(Interval::class)]
 class IntervalTest extends TestCase
@@ -42,8 +40,8 @@ class IntervalTest extends TestCase
 
         $this->assertInstanceOf(Text::class, $interval->min);
         $this->assertInstanceOf(Text::class, $interval->max);
-        $this->assertEquals('2025-01-01', $interval->min->value);
-        $this->assertEquals('2025-01-31', $interval->max->value);
+        $this->assertSame('2025-01-01', $interval->min->toString());
+        $this->assertSame('2025-01-31', $interval->max->toString());
     }
 
     #[Test]
@@ -54,8 +52,8 @@ class IntervalTest extends TestCase
         $this->assertInstanceOf(Interval::class, $interval);
         $this->assertInstanceOf(Number::class, $interval->min);
         $this->assertInstanceOf(Number::class, $interval->max);
-        $this->assertEquals(10, $interval->min->value);
-        $this->assertEquals(20, $interval->max->value);
+        $this->assertEquals(10, $interval->min->value); // @phpstan-ignore property.protected
+        $this->assertEquals(20, $interval->max->value); // @phpstan-ignore property.protected
     }
 
     #[Test]
@@ -64,7 +62,7 @@ class IntervalTest extends TestCase
         $interval = Interval::make(10, 20);
 
         $this->assertInstanceOf(Text::class, $interval->toText());
-        $this->assertEquals('10...20', $interval->toText()->value);
+        $this->assertSame('10...20', $interval->toText()->toString());
     }
 
     #[Test]
@@ -73,7 +71,7 @@ class IntervalTest extends TestCase
         $interval = Interval::make(10, 20);
 
         $this->assertInstanceOf(Text::class, $interval->toText('||'));
-        $this->assertEquals('10||20', $interval->toText('||')->value);
+        $this->assertSame('10||20', $interval->toText('||')->toString());
     }
 
     #[Test]
@@ -81,7 +79,7 @@ class IntervalTest extends TestCase
     {
         $interval = Interval::make(1, 100);
 
-        $this->assertEquals('"1...100"', json_encode($interval));
+        $this->assertSame('"1...100"', json_encode($interval));
     }
 
     #[Test]
@@ -89,7 +87,7 @@ class IntervalTest extends TestCase
     {
         $interval = Interval::make(1, 100);
 
-        $this->assertEquals('1...100', (string) $interval);
+        $this->assertSame('1...100', (string) $interval);
     }
 
     #[Test]
@@ -106,8 +104,8 @@ class IntervalTest extends TestCase
             ];
         };
 
-        $this->assertInstanceOf(Interval::class, $model->date);
-        $this->assertEquals(Date::parse('2025-01-01'), $model->date->min);
-        $this->assertEquals(Date::parse('2025-01-31'), $model->date->max);
+        $this->assertInstanceOf(Interval::class, $model->date); // @phpstan-ignore property.notFound
+        $this->assertEquals(Date::parse('2025-01-01'), $model->date->min); // @phpstan-ignore property.notFound
+        $this->assertEquals(Date::parse('2025-01-31'), $model->date->max); // @phpstan-ignore property.notFound
     }
 }

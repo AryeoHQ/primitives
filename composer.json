@@ -23,7 +23,7 @@
         "nesbot/carbon": "^3.10"
     },
     "require-dev": {
-        "aryeo/tooling-laravel": "^0.0.17",
+        "aryeo/tooling-laravel": "0.0.27",
         "orchestra/testbench": "^10.6",
         "orchestra/testbench-core": "^10.7",
         "brianium/paratest": "^7.14",
@@ -38,7 +38,12 @@
     "autoload": {
         "psr-4": {
             "Support\\": "src/Support/"
-        }
+        },
+        "exclude-from-classmap": [
+            "*Test.php",
+            "*TestCases.php",
+            "/tests/"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

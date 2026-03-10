@@ -1,27 +1,25 @@
 <?php
 
-namespace Tests\Support\Primitives;
+declare(strict_types=1);
 
-use Tests\TestCase;
-use Support\Primitives\Sort;
-use Support\Primitives\Text;
-use Support\Primitives\Direction;
-use Support\Primitives\Casts\AsSort;
+namespace Support\Primitives;
+
 use InvalidArgumentException;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
+use Support\Primitives\Casts\AsSort;
+use Tests\TestCase;
 
 #[CoversClass(Sort::class)]
 class SortTest extends TestCase
 {
-
     #[Test]
     public function sort_can_be_created_with_direction_enum(): void
     {
         $sort = Sort::make('created_at', Direction::Desc);
 
         $this->assertInstanceOf(Sort::class, $sort);
-        $this->assertEquals('created_at', $sort->field->toString());
+        $this->assertSame('created_at', $sort->field->toString());
         $this->assertSame(Direction::Desc, $sort->direction);
     }
 
@@ -30,7 +28,7 @@ class SortTest extends TestCase
     {
         $sort = Sort::make('created_at', 'desc');
 
-        $this->assertEquals('created_at', $sort->field->toString());
+        $this->assertSame('created_at', $sort->field->toString());
         $this->assertSame(Direction::Desc, $sort->direction);
     }
 
@@ -47,7 +45,7 @@ class SortTest extends TestCase
     {
         $sort = Sort::make('-created_at');
 
-        $this->assertEquals('created_at', $sort->field->toString());
+        $this->assertSame('created_at', $sort->field->toString());
         $this->assertSame(Direction::Desc, $sort->direction);
     }
 
@@ -56,7 +54,7 @@ class SortTest extends TestCase
     {
         $sort = Sort::make('created_at');
 
-        $this->assertEquals('created_at', $sort->field->toString());
+        $this->assertSame('created_at', $sort->field->toString());
         $this->assertSame(Direction::Asc, $sort->direction);
     }
 
@@ -66,7 +64,7 @@ class SortTest extends TestCase
         $sort = Sort::make(Text::make('created_at'), Direction::Asc);
 
         $this->assertInstanceOf(Text::class, $sort->field);
-        $this->assertEquals('created_at', $sort->field->toString());
+        $this->assertSame('created_at', $sort->field->toString());
     }
 
     #[Test]
@@ -107,7 +105,7 @@ class SortTest extends TestCase
     {
         $sort = Sort::make('created_at', Direction::Desc);
 
-        $this->assertEquals(
+        $this->assertSame(
             '"-created_at"',
             json_encode($sort),
         );
@@ -120,8 +118,8 @@ class SortTest extends TestCase
         $asc = Sort::make('created_at', Direction::Asc);
 
         $this->assertInstanceOf(Text::class, $desc->toText());
-        $this->assertEquals('-created_at', $desc->toText()->toString());
-        $this->assertEquals('created_at', $asc->toText()->toString());
+        $this->assertSame('-created_at', $desc->toText()->toString());
+        $this->assertSame('created_at', $asc->toText()->toString());
     }
 
     #[Test]
@@ -130,8 +128,8 @@ class SortTest extends TestCase
         $desc = Sort::make('created_at', Direction::Desc);
         $asc = Sort::make('created_at', Direction::Asc);
 
-        $this->assertEquals('-created_at', (string) $desc);
-        $this->assertEquals('created_at', (string) $asc);
+        $this->assertSame('-created_at', (string) $desc);
+        $this->assertSame('created_at', (string) $asc);
     }
 
     #[Test]
@@ -162,9 +160,9 @@ class SortTest extends TestCase
             ];
         };
 
-        $this->assertInstanceOf(Sort::class, $model->sort);
-        $this->assertEquals('created_at', $model->sort->field->toString());
-        $this->assertSame(Direction::Desc, $model->sort->direction);
+        $this->assertInstanceOf(Sort::class, $model->sort); // @phpstan-ignore property.notFound
+        $this->assertSame('created_at', $model->sort->field->toString()); // @phpstan-ignore property.notFound
+        $this->assertSame(Direction::Desc, $model->sort->direction); // @phpstan-ignore property.notFound
     }
 
     #[Test]
@@ -179,9 +177,9 @@ class SortTest extends TestCase
             ];
         };
 
-        $model->sort = Sort::make('created_at', Direction::Desc);
+        $model->sort = Sort::make('created_at', Direction::Desc); // @phpstan-ignore property.notFound
 
-        $this->assertEquals(
+        $this->assertSame(
             '-created_at',
             $model->getAttributes()['sort'],
         );
@@ -199,9 +197,9 @@ class SortTest extends TestCase
             ];
         };
 
-        $model->sort = Sort::make('created_at', Direction::Asc);
+        $model->sort = Sort::make('created_at', Direction::Asc); // @phpstan-ignore property.notFound
 
-        $this->assertEquals(
+        $this->assertSame(
             'created_at',
             $model->getAttributes()['sort'],
         );
@@ -221,7 +219,7 @@ class SortTest extends TestCase
             ];
         };
 
-        $this->assertNull($model->sort);
+        $this->assertNull($model->sort); // @phpstan-ignore property.notFound
     }
 
     #[Test]
@@ -238,7 +236,7 @@ class SortTest extends TestCase
             ];
         };
 
-        $model->sort = null;
+        $model->sort = null; // @phpstan-ignore property.notFound
 
         $this->assertNull($model->getAttributes()['sort']);
     }
@@ -249,7 +247,7 @@ class SortTest extends TestCase
         $sort = Sort::make('-created_at', Direction::Asc);
 
         $this->assertSame(Direction::Desc, $sort->direction);
-        $this->assertEquals('created_at', $sort->field->toString());
+        $this->assertSame('created_at', $sort->field->toString());
     }
 
     #[Test]
@@ -272,9 +270,9 @@ class SortTest extends TestCase
             ];
         };
 
-        $model->sort = '-created_at';
+        $model->sort = '-created_at'; // @phpstan-ignore property.notFound
 
-        $this->assertEquals(
+        $this->assertSame(
             '-created_at',
             $model->getAttributes()['sort'],
         );
@@ -286,7 +284,7 @@ class SortTest extends TestCase
         $original = Sort::make('created_at', Direction::Desc);
         $roundtripped = Sort::make($original->toText());
 
-        $this->assertEquals($original->field->toString(), $roundtripped->field->toString());
+        $this->assertSame($original->field->toString(), $roundtripped->field->toString());
         $this->assertSame($original->direction, $roundtripped->direction);
     }
 }
