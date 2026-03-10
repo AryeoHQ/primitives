@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit 
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-  xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd" 
-  bootstrap="vendor/autoload.php" 
-  colors="true" 
+<phpunit
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/12.5/phpunit.xsd"
+  bootstrap="vendor/autoload.php"
+  colors="true"
   cacheDirectory=".phpunit.cache"
   displayDetailsOnTestsThatTriggerDeprecations="true"
 >
   <testsuites>
-    <testsuite name="Feature">
-      <directory suffix="Test.php">./tests</directory>
+    <testsuite name="All">
+      <directory suffix="Test.php">./src</directory>
     </testsuite>
   </testsuites>
   <source>
     <include>
       <directory suffix=".php">./src</directory>
     </include>
+    <exclude>
+      <directory suffix="Test.php">./src</directory>
+      <directory suffix="TestCases.php">./src</directory>
+    </exclude>
   </source>
 </phpunit>
