@@ -23,7 +23,7 @@
         "nesbot/carbon": "^3.10"
     },
     "require-dev": {
-        "aryeo/tooling-laravel": "0.0.34",
+        "aryeo/tooling-laravel": "0.0.37",
         "orchestra/testbench": "^10.6",
         "orchestra/testbench-core": "^10.7",
         "brianium/paratest": "^7.14",
@@ -53,6 +53,33 @@
     "scripts": {
         "test": "vendor/bin/phpunit",
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    },
+    "extra": {
+        "tooling": {
+            "phpstan": {
+                "config": {
+                    "paths": [
+                        "src"
+                    ]
+                }
+            },
+            "rector": {
+                "config": {
+                    "paths": [
+                        "src",
+                        "tests"
+                    ]
+                }
+            },
+            "pint": {
+                "config": {
+                    "paths": [
+                        "src",
+                        "tests"
+                    ]
+                }
+            }
+        }
     },
     "config": {
         "sort-packages": true,
