@@ -10,6 +10,12 @@ updates:
       interval: "weekly"
     labels:
       - "dependencies"
+    commit-message:
+      prefix: "chore"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
 
   - package-ecosystem: "composer"
     directory: "/"
