@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b092531d06b77bd01452b4dfd3daefa7",
+    "content-hash": "bbebcf7caea66f2d120f19f8c83aaa23",
     "packages": [
         {
             "name": "brick/math",
@@ -5809,16 +5809,16 @@
     "packages-dev": [
         {
             "name": "aryeo/tooling-laravel",
-            "version": "0.0.37",
+            "version": "0.0.39",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AryeoHQ/tooling-laravel.git",
-                "reference": "3c44a11d95b8036e0dc6927276c43ad7474df7f3"
+                "reference": "9304a2b6c8be3f20a1f2300748e96c557fd3ec1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AryeoHQ/tooling-laravel/zipball/3c44a11d95b8036e0dc6927276c43ad7474df7f3",
-                "reference": "3c44a11d95b8036e0dc6927276c43ad7474df7f3",
+                "url": "https://api.github.com/repos/AryeoHQ/tooling-laravel/zipball/9304a2b6c8be3f20a1f2300748e96c557fd3ec1f",
+                "reference": "9304a2b6c8be3f20a1f2300748e96c557fd3ec1f",
                 "shasum": ""
             },
             "require": {
@@ -5827,19 +5827,19 @@
                 "composer/class-map-generator": "^1.4",
                 "composer/composer": "^2.0",
                 "ergebnis/phpstan-rules": "^2.12",
-                "larastan/larastan": "^3.8",
+                "larastan/larastan": "3.9.*",
                 "laravel/framework": "^12.36",
                 "laravel/pint": "^1.25",
                 "laravel/prompts": "^0.3.13",
                 "nesbot/carbon": "^3.11",
                 "nikic/php-parser": "^5.6",
                 "php": "^8.4",
-                "phpstan/phpstan": "^2.1",
+                "phpstan/phpstan": "2.1.*",
                 "phpstan/phpstan-deprecation-rules": "^2.0",
                 "phpstan/phpstan-phpunit": "^2.0",
                 "phpstan/phpstan-strict-rules": "^2.0",
                 "phpunit/phpunit": "^12.5",
-                "rector/rector": "^2.1",
+                "rector/rector": "2.4.*",
                 "shipmonk/composer-dependency-analyser": "^1.8",
                 "symfony/console": "^7.3",
                 "symfony/finder": "^7.3",
@@ -5912,10 +5912,10 @@
             ],
             "description": "Development tooling for Laravel",
             "support": {
-                "source": "https://github.com/AryeoHQ/tooling-laravel/tree/0.0.37",
+                "source": "https://github.com/AryeoHQ/tooling-laravel/tree/0.0.39",
                 "issues": "https://github.com/AryeoHQ/tooling-laravel/issues"
             },
-            "time": "2026-05-07T18:23:31+00:00"
+            "time": "2026-08-21T15:55:44+00:00"
         },
         {
             "name": "brianium/paratest",
@@ -10867,5 +10867,5 @@
         "ext-bcmath": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }
