@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8db655f5081456797faa1e89945c1761",
+    "content-hash": "8e7d3cd619ad90b8b76a67804a7df48f",
     "packages": [
         {
             "name": "brick/math",
@@ -5808,16 +5808,16 @@
     "packages-dev": [
         {
             "name": "aryeo/tooling-laravel",
-            "version": "0.0.40",
+            "version": "0.0.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AryeoHQ/tooling-laravel.git",
-                "reference": "d1635d14a1f1c520875630d66ecd7dfa63ed2898"
+                "reference": "215de64d5133dda3b87bc6cbaeefa860264c7619"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AryeoHQ/tooling-laravel/zipball/d1635d14a1f1c520875630d66ecd7dfa63ed2898",
-                "reference": "d1635d14a1f1c520875630d66ecd7dfa63ed2898",
+                "url": "https://api.github.com/repos/AryeoHQ/tooling-laravel/zipball/215de64d5133dda3b87bc6cbaeefa860264c7619",
+                "reference": "215de64d5133dda3b87bc6cbaeefa860264c7619",
                 "shasum": ""
             },
             "require": {
@@ -5911,10 +5911,10 @@
             ],
             "description": "Development tooling for Laravel",
             "support": {
-                "source": "https://github.com/AryeoHQ/tooling-laravel/tree/0.0.40",
+                "source": "https://github.com/AryeoHQ/tooling-laravel/tree/0.0.41",
                 "issues": "https://github.com/AryeoHQ/tooling-laravel/issues"
             },
-            "time": "2026-10-14T22:59:20+00:00"
+            "time": "2026-10-16T14:53:25+00:00"
         },
         {
             "name": "brianium/paratest",
@@ -10859,5 +10859,5 @@
         "ext-bcmath": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }

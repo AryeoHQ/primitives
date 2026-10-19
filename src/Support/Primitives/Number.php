@@ -32,22 +32,22 @@ final class Number extends Primitive
 
     public function subtract(int|float|string|Text|Number $value): static
     {
-        return static::make(bcsub((string) $this->value, (string) $this->parseValue($value), 2));
+        return self::make(bcsub((string) $this->value, (string) $this->parseValue($value), 2));
     }
 
     public function multiply(int|float|string|Text|Number $factor): static
     {
-        return static::make(bcmul((string) $this->value, (string) $this->parseValue($factor), 2));
+        return self::make(bcmul((string) $this->value, (string) $this->parseValue($factor), 2));
     }
 
     public function divide(int|float|string|Text|Number $factor): static
     {
-        return static::make(bcdiv((string) $this->value, (string) $this->parseValue($factor), 2));
+        return self::make(bcdiv((string) $this->value, (string) $this->parseValue($factor), 2));
     }
 
     public function round(int $precision = 0, RoundingMode $mode = RoundingMode::HalfAwayFromZero): static
     {
-        return static::make(round($this->value, $precision, $mode));
+        return self::make(round($this->value, $precision, $mode));
     }
 
     private function parseValue(int|float|string|Text|Number $value): int|float
@@ -64,12 +64,12 @@ final class Number extends Primitive
 
     public function toDecimal(int $precision = 2): static
     {
-        return static::make(number_format($this->value, $precision));
+        return self::make(number_format($this->value, $precision));
     }
 
     public function toInteger(): static
     {
-        return static::make($this->value)->round();
+        return self::make($this->value)->round();
     }
 
     public function jsonSerialize(): int|float
