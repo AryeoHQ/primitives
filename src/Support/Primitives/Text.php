@@ -37,7 +37,7 @@ final class Text extends Stringable implements Castable, Primitive
 
     public static function of(string $string): static
     {
-        return new static($string);
+        return new self($string);
     }
 
     public function toInterval(string $delimiter = '...'): Interval
