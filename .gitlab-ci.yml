@@ -10,6 +10,10 @@ include:
     ref: main
     file: php-composer-package.yml
 
+# Number uses bcmath, which composer.json requires and the CI image does not include.
+variables:
+  PHP_EXTENSIONS: bcmath
+
 stages:
   - test
   - package
