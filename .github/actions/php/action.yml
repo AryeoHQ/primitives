@@ -1,0 +1,63 @@
+name: PHP in Docker
+description: >
+  Builds a PHP image for this job and adds a php-ci command that runs a command inside it,
+  in the checked-out workspace. Use on the VPC CodeBuild runner, which can reach Artifactory
+  and run Docker but has no PHP of its own.
+
+inputs:
+  php_version:
+    description: 'The PHP version to use'
+    default: '8.4'
+    required: false
+  extensions:
+    description: 'Space-separated PHP extensions to compile into the image, e.g. "bcmath"'
+    default: ''
+    required: false
+  coverage:
+    description: 'Set to "pcov" to install the pcov coverage driver'
+    default: 'none'
+    required: false
+
+runs:
+  using: composite
+  steps:
+    # Base images come through Artifactory's Docker Hub proxy, which caches them in-network
+    # and avoids Docker Hub's pull limits. It serves anonymous pulls.
+    - name: Build PHP image
+      shell: bash
+      env:
+        PHP_VERSION: ${{ inputs.php_version }}
+        EXTENSIONS: ${{ inputs.extensions }}
+        COVERAGE: ${{ inputs.coverage }}
+      run: |
+        docker build --quiet --tag php-ci \
+          --build-arg PHP_VERSION --build-arg EXTENSIONS --build-arg COVERAGE - <<'DOCKERFILE'
+        ARG PHP_VERSION
+        FROM docker-remote.artifactory.zgtools.net/library/php:${PHP_VERSION}-cli-alpine
+        ARG EXTENSIONS
+        ARG COVERAGE
+        COPY --from=docker-remote.artifactory.zgtools.net/library/composer:2 /usr/bin/composer /usr/bin/composer
+        RUN apk add --no-cache git unzip \
+         && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS linux-headers \
+         && if [ -n "$EXTENSIONS" ]; then docker-php-ext-install -j"$(nproc)" $EXTENSIONS; fi \
+         && if [ "$COVERAGE" = pcov ]; then pecl install pcov && docker-php-ext-enable pcov; fi \
+         && apk del .build-deps \
+         && printf 'memory_limit=-1\ndate.timezone=UTC\n' > "$PHP_INI_DIR/conf.d/zz-ci.ini"
+        DOCKERFILE
+
+    # php-ci runs as the runner's user, so files it writes in the workspace stay removable,
+    # and shares a Composer cache directory across the job's steps.
+    - name: Add php-ci command
+      shell: bash
+      run: |
+        mkdir -p "$RUNNER_TEMP/php-ci/bin" "$RUNNER_TEMP/php-ci/composer-cache"
+        cat > "$RUNNER_TEMP/php-ci/bin/php-ci" <<'SCRIPT'
+        #!/bin/sh
+        exec docker run --rm --user "$(id -u):$(id -g)" \
+          -e COMPOSER_HOME=/tmp/composer -e COMPOSER_CACHE_DIR=/composer-cache \
+          -v "$RUNNER_TEMP/php-ci/composer-cache:/composer-cache" \
+          -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$PWD" \
+          php-ci "$@"
+        SCRIPT
+        chmod +x "$RUNNER_TEMP/php-ci/bin/php-ci"
+        echo "$RUNNER_TEMP/php-ci/bin" >> "$GITHUB_PATH"

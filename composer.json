@@ -30,9 +30,10 @@
         "phpunit/phpunit": "^12 || ^13"
     },
     "repositories": {
-        "tooling-laravel": {
-            "type": "vcs",
-            "url": "https://github.com/AryeoHQ/tooling-laravel"
+        "artifactory": {
+            "type": "composer",
+            "url": "https://artifactory.zgtools.net/artifactory/api/composer/listing-and-vendor-management-composer/",
+            "only": ["aryeo/*", "zillow/*"]
         }
     },
     "autoload": {

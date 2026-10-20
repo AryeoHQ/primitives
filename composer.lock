@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8e7d3cd619ad90b8b76a67804a7df48f",
+    "content-hash": "dbc8383b581766f1dedd90827e547a1b",
     "packages": [
         {
             "name": "brick/math",
@@ -5809,16 +5809,10 @@
         {
             "name": "aryeo/tooling-laravel",
             "version": "0.0.41",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/AryeoHQ/tooling-laravel.git",
-                "reference": "215de64d5133dda3b87bc6cbaeefa860264c7619"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AryeoHQ/tooling-laravel/zipball/215de64d5133dda3b87bc6cbaeefa860264c7619",
-                "reference": "215de64d5133dda3b87bc6cbaeefa860264c7619",
-                "shasum": ""
+                "url": "https://artifactory.zgtools.net/artifactory/api/composer/listing-and-vendor-management-composer/direct-dists/aryeo/tooling-laravel/tooling-laravel-0.0.41.zip",
+                "reference": "d31fa77ce196481820465f12b99f78999e37a27f"
             },
             "require": {
                 "canvural/larastan-strict-rules": "^3.0",
@@ -5909,12 +5903,7 @@
                     "email": "justinsel@zillowgroup.com"
                 }
             ],
-            "description": "Development tooling for Laravel",
-            "support": {
-                "source": "https://github.com/AryeoHQ/tooling-laravel/tree/0.0.41",
-                "issues": "https://github.com/AryeoHQ/tooling-laravel/issues"
-            },
-            "time": "2026-10-16T14:53:25+00:00"
+            "description": "Development tooling for Laravel"
         },
         {
             "name": "brianium/paratest",
