@@ -1,5 +1,8 @@
 name: Code Quality
 
+# Jobs run on the AryeoHQ VPC CodeBuild runner, which can reach Artifactory, and run PHP in
+# Docker through ./.github/actions/php, because the runner has no PHP of its own.
+
 on:
   push:
 
@@ -9,60 +12,64 @@ concurrency:
 
 jobs:
   code-style:
-    runs-on: ubuntu-latest
+    runs-on: codebuild-linux-amd64-vpc-${{ github.run_id }}-${{ github.run_attempt }}
 
     steps:
       - name: Checkout ref
         uses: actions/checkout@v7
 
       - name: Setup PHP
-        uses: ./.github/actions/setup-php
+        uses: ./.github/actions/php
         with:
-          extensions: mbstring tokenizer xml
+          extensions: bcmath
+
+      - name: Install Composer dependencies
+        run: php-ci composer install --prefer-dist --no-interaction --no-progress
 
       - name: Check code style
-        shell: sh
-        run: ./vendor/bin/testbench tooling:pint
+        run: php-ci ./vendor/bin/testbench tooling:pint
 
   static-analysis:
-    runs-on: ubuntu-latest
+    runs-on: codebuild-linux-amd64-vpc-${{ github.run_id }}-${{ github.run_attempt }}
 
     steps:
       - name: Checkout ref
         uses: actions/checkout@v7
 
       - name: Setup PHP
-        uses: ./.github/actions/setup-php
+        uses: ./.github/actions/php
         with:
-          extensions: tokenizer, opcache, pcntl, sockets, zip
+          extensions: bcmath
+
+      - name: Install Composer dependencies
+        run: php-ci composer install --prefer-dist --no-interaction --no-progress
 
       - name: Prepare Testbench cache dir
-        run: |
-          sudo mkdir -p ./vendor/orchestra/testbench-core/laravel/bootstrap/cache
-          sudo chmod -R 0777 ./vendor/orchestra/testbench-core/laravel/bootstrap/cache
+        run: mkdir -p ./vendor/orchestra/testbench-core/laravel/bootstrap/cache
 
       - name: Run static analysis on application
-        shell: sh
-        run: ./vendor/bin/testbench tooling:phpstan --memory-limit=4G --error-format=github
+        run: php-ci ./vendor/bin/testbench tooling:phpstan --memory-limit=4G --error-format=github
 
   dependency-analysis:
-    runs-on: ubuntu-latest
+    runs-on: codebuild-linux-amd64-vpc-${{ github.run_id }}-${{ github.run_attempt }}
 
     steps:
       - name: Checkout ref
         uses: actions/checkout@v7
 
       - name: Setup PHP
-        uses: ./.github/actions/setup-php
+        uses: ./.github/actions/php
         with:
-          extensions: tokenizer
+          extensions: bcmath
 
-      - name: Check code style
-        shell: sh
-        run: ./vendor/bin/composer-dependency-analyser
+      - name: Install Composer dependencies
+        run: php-ci composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Check dependencies
+        run: php-ci ./vendor/bin/composer-dependency-analyser
 
   tests:
-    runs-on: ubuntu-latest
+    runs-on: codebuild-linux-amd64-vpc-${{ github.run_id }}-${{ github.run_attempt }}
     strategy:
       fail-fast: true
       matrix:
@@ -83,25 +90,22 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Setup PHP
-        uses: ./.github/actions/setup-php
+        uses: ./.github/actions/php
         with:
-          extensions: iconv, mbstring
-          install_dependencies: 'false'
           php_version: ${{ matrix.php }}
+          extensions: bcmath
+          coverage: pcov
 
       - name: Install Composer dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
-          composer update --${{ matrix.stability }} --prefer-dist --no-interaction
+          php-ci composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          php-ci composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: List installed Composer dependencies
-        run: composer show -D
+        run: php-ci composer show -D
 
       - name: Run tests
-        env:
-          DB_HOST: localhost
-        shell: sh
-        run: ./vendor/bin/paratest --coverage-cobertura coverage.xml
+        run: php-ci ./vendor/bin/paratest --coverage-cobertura coverage.xml
 
       - name: Code Coverage Report
         uses: irongut/CodeCoverageSummary@v1.3.0
