@@ -1,63 +1,83 @@
 name: PHP in Docker
 description: >
-  Builds a PHP image for this job and adds a php-ci command that runs a command inside it,
+  Pulls the PHP Archetype dev image and adds a php-ci command that runs a command inside it,
   in the checked-out workspace. Use on the VPC CodeBuild runner, which can reach Artifactory
   and run Docker but has no PHP of its own.
 
 inputs:
   php_version:
-    description: 'The PHP version to use'
+    description: 'The PHP version to use: 8.4 or 8.5'
     default: '8.4'
     required: false
   extensions:
-    description: 'Space-separated PHP extensions to compile into the image, e.g. "bcmath"'
+    description: 'Space-separated bundled PHP extensions the image lacks, e.g. "intl"'
+    default: ''
+    required: false
+  build_deps:
+    description: 'Debian packages the extensions need to compile, e.g. "libicu-dev"'
     default: ''
     required: false
   coverage:
-    description: 'Set to "pcov" to install the pcov coverage driver'
+    description: 'Set to "pcov" to collect coverage; "none" turns pcov off'
     default: 'none'
     required: false
 
 runs:
   using: composite
   steps:
-    # Base images come through Artifactory's Docker Hub proxy, which caches them in-network
-    # and avoids Docker Hub's pull limits. It serves anonymous pulls.
-    - name: Build PHP image
+    # The dev image (vendor-platform/php-archetype/images) carries composer, git, pcov and the
+    # common extensions. Its tags are immutable, so each PHP version is pinned here.
+    - name: Prepare PHP image
       shell: bash
       env:
         PHP_VERSION: ${{ inputs.php_version }}
         EXTENSIONS: ${{ inputs.extensions }}
-        COVERAGE: ${{ inputs.coverage }}
+        BUILD_DEPS: ${{ inputs.build_deps }}
       run: |
-        docker build --quiet --tag php-ci \
-          --build-arg PHP_VERSION --build-arg EXTENSIONS --build-arg COVERAGE - <<'DOCKERFILE'
-        ARG PHP_VERSION
-        FROM docker-remote.artifactory.zgtools.net/library/php:${PHP_VERSION}-cli-alpine
+        case "$PHP_VERSION" in
+          8.4) image=listing-and-vendor-management-docker.artifactory.zgtools.net/php-archetype/php:8.4.26-dev-bookworm-17 ;;
+          8.5) image=listing-and-vendor-management-docker.artifactory.zgtools.net/php-archetype/php:8.5.11-dev-bookworm-17 ;;
+          *) echo "::error::Unsupported php_version $PHP_VERSION; use 8.4 or 8.5"; exit 1 ;;
+        esac
+        docker pull --quiet "$image"
+        if [ -z "$EXTENSIONS" ]; then
+          docker tag "$image" php-ci
+          exit 0
+        fi
+        docker build --quiet --tag php-ci --build-arg IMAGE="$image" \
+          --build-arg EXTENSIONS="$EXTENSIONS" --build-arg BUILD_DEPS="$BUILD_DEPS" - <<'DOCKERFILE'
+        ARG IMAGE
+        FROM ${IMAGE}
         ARG EXTENSIONS
-        ARG COVERAGE
-        COPY --from=docker-remote.artifactory.zgtools.net/library/composer:2 /usr/bin/composer /usr/bin/composer
-        RUN apk add --no-cache git unzip \
-         && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS linux-headers \
-         && if [ -n "$EXTENSIONS" ]; then docker-php-ext-install -j"$(nproc)" $EXTENSIONS; fi \
-         && if [ "$COVERAGE" = pcov ]; then pecl install pcov && docker-php-ext-enable pcov; fi \
-         && apk del .build-deps \
-         && printf 'memory_limit=-1\ndate.timezone=UTC\n' > "$PHP_INI_DIR/conf.d/zz-ci.ini"
+        ARG BUILD_DEPS
+        RUN set -eux; \
+            if [ -n "$BUILD_DEPS" ]; then \
+              apt-get update; apt-get install -y --no-install-recommends $BUILD_DEPS; rm -rf /var/lib/apt/lists/*; \
+            fi; \
+            missing=""; \
+            for extension in $EXTENSIONS; do php -m | grep -qix "$extension" || missing="$missing $extension"; done; \
+            if [ -n "$missing" ]; then docker-php-ext-install -j"$(nproc)" $missing; fi
         DOCKERFILE
 
     # php-ci runs as the runner's user, so files it writes in the workspace stay removable,
-    # and shares a Composer cache directory across the job's steps.
+    # and shares a Composer cache directory across the job's steps. It matches setup-php's
+    # defaults (no memory limit, UTC) and turns off dd-trace, which the image loads: CI sends
+    # no traces, and tracing changes some packages' test results.
     - name: Add php-ci command
       shell: bash
+      env:
+        PCOV_ENABLED: ${{ inputs.coverage == 'pcov' && '1' || '0' }}
       run: |
         mkdir -p "$RUNNER_TEMP/php-ci/bin" "$RUNNER_TEMP/php-ci/composer-cache"
-        cat > "$RUNNER_TEMP/php-ci/bin/php-ci" <<'SCRIPT'
+        cat > "$RUNNER_TEMP/php-ci/bin/php-ci" <<SCRIPT
         #!/bin/sh
-        exec docker run --rm --user "$(id -u):$(id -g)" \
-          -e COMPOSER_HOME=/tmp/composer -e COMPOSER_CACHE_DIR=/composer-cache \
-          -v "$RUNNER_TEMP/php-ci/composer-cache:/composer-cache" \
-          -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$PWD" \
-          php-ci "$@"
+        exec docker run --rm --user "\$(id -u):\$(id -g)" \\
+          -e COMPOSER_HOME=/tmp/composer -e COMPOSER_CACHE_DIR=/composer-cache \\
+          -e PHP_MEMORY_LIMIT=-1 -e PHP_DATE_TIMEZONE=UTC -e DD_TRACE_ENABLED=false \\
+          -e PHP_PCOV_ENABLED=$PCOV_ENABLED \\
+          -v "\$RUNNER_TEMP/php-ci/composer-cache:/composer-cache" \\
+          -v "\$GITHUB_WORKSPACE:\$GITHUB_WORKSPACE" -w "\$PWD" \\
+          php-ci "\$@"
         SCRIPT
         chmod +x "$RUNNER_TEMP/php-ci/bin/php-ci"
         echo "$RUNNER_TEMP/php-ci/bin" >> "$GITHUB_PATH"
