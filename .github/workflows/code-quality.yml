@@ -20,8 +20,6 @@ jobs:
 
       - name: Setup PHP
         uses: ./.github/actions/php
-        with:
-          extensions: bcmath
 
       - name: Install Composer dependencies
         run: php-ci composer install --prefer-dist --no-interaction --no-progress
@@ -38,8 +36,6 @@ jobs:
 
       - name: Setup PHP
         uses: ./.github/actions/php
-        with:
-          extensions: bcmath
 
       - name: Install Composer dependencies
         run: php-ci composer install --prefer-dist --no-interaction --no-progress
@@ -59,8 +55,6 @@ jobs:
 
       - name: Setup PHP
         uses: ./.github/actions/php
-        with:
-          extensions: bcmath
 
       - name: Install Composer dependencies
         run: php-ci composer install --prefer-dist --no-interaction --no-progress
@@ -93,7 +87,6 @@ jobs:
         uses: ./.github/actions/php
         with:
           php_version: ${{ matrix.php }}
-          extensions: bcmath
           coverage: pcov
 
       - name: Install Composer dependencies
