@@ -19,10 +19,3 @@ updates:
         update-types:
           - "minor"
           - "patch"
-
-  - package-ecosystem: "composer"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    labels:
-      - "dependencies"
