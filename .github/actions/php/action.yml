@@ -7,7 +7,7 @@ description: >
 inputs:
   php_version:
     description: 'The PHP version to use: 8.4 or 8.5'
-    default: '8.4'
+    default: '8.5'
     required: false
   extensions:
     description: 'Space-separated bundled PHP extensions the image lacks, e.g. "intl"'
