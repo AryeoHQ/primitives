@@ -35,7 +35,7 @@ runs:
         BUILD_DEPS: ${{ inputs.build_deps }}
       run: |
         case "$PHP_VERSION" in
-          8.5) image=listing-and-vendor-management-docker.artifactory.zgtools.net/php-archetype/php:8.5.12-dev-bookworm-17 ;;
+          8.5) image=listing-and-vendor-management-docker.artifactory.zgtools.net/php-archetype/php:8.5.12-dev-bookworm-27 ;;
           *) echo "::error::Unsupported php_version $PHP_VERSION; use 8.5"; exit 1 ;;
         esac
         docker pull --quiet "$image"
