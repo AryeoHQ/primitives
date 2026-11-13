@@ -24,6 +24,16 @@ class IntervalTest extends TestCase
     }
 
     #[Test]
+    public function interval_can_be_created_from_primitive(): void
+    {
+        $interval = Interval::make(new Interval(1, 10));
+
+        $this->assertInstanceOf(Interval::class, $interval);
+        $this->assertEquals(1, $interval->min->value);
+        $this->assertEquals(10, $interval->max->value);
+    }
+
+    #[Test]
     public function interval_can_be_created_from_carbon_period(): void
     {
         $interval = Interval::make(CarbonPeriod::create('2025-01-01', '2025-01-31'));

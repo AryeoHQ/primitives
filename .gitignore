@@ -1,6 +1,7 @@
 .env.devbox
 .env.testing
 .envrc
+.idea/
 devbox.json
 devbox.lock
 vendor/
